@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "id": "crates",
+  "version": "0.1.0",
+  "game": "26.3",
+  "horizon": "7066b93c9668f221369cbac44310b97fd4b5ffaa",
+  "mixins": "d9c83d7096b7ea5b83678da2efdfd6161f74997e",
+  "hooks": 22
+}

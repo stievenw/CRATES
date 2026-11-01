@@ -1,0 +1,83 @@
+[mod]
+id = "crates"
+version = "0.1.0"
+priority = 100
+
+[compatibility]
+horizon_revision = "7066b93c9668f221369cbac44310b97fd4b5ffaa"
+
+[[module]]
+id = "core"
+file = "crates/horizon-client/src/game.rs"
+name = "crates_core"
+source = "core.rs"
+
+[[module]]
+id = "runtime"
+file = "crates/horizon-client/src/game.rs"
+name = "crates"
+source = "runtime.rs"
+
+[[injection]]
+id = "register"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_register_commands"
+helper = "register.rs"
+bindings = [
+  { name = "commands", ty = "&mut Vec<crate::game::native_server::NativeCommand>", value = "&mut *commands" },
+]
+
+[[injection]]
+id = "command"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_perform_command"
+helper = "command.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "player", ty = "&crate::game::native_server::NativeServerPlayer", value = "player" },
+  { name = "command", ty = "&str", value = "command" },
+  { name = "ran", ty = "&mut bool", value = "&mut *ran" },
+]
+
+[[injection]]
+id = "right-click"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_right_click_block"
+helper = "right_click_block.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "pos", ty = "[i32; 3]", value = "pos" },
+  { name = "canceled", ty = "&mut bool", value = "&mut *canceled" },
+]
+
+[[injection]]
+id = "menu-click"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_menu_clicked"
+helper = "menu_clicked.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "uuid", ty = "u128", value = "uuid" },
+  { name = "window", ty = "i32", value = "window" },
+  { name = "slot", ty = "i32", value = "slot" },
+]
+
+[[injection]]
+id = "menu-close"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_menu_closed"
+helper = "menu_closed.rs"
+bindings = [
+  { name = "uuid", ty = "u128", value = "uuid" },
+  { name = "window", ty = "i32", value = "window" },
+]
+
+[[injection]]
+id = "server-tick"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_server_tick"
+helper = "server_tick.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "phase", ty = "crate::game::native_lifecycle::ServerTickPhase", value = "phase" },
+]
